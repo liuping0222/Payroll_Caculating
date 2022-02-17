@@ -159,7 +159,7 @@ class PayCaculator:
 
     def bonus_divide(self, bonus):
         Unoptimised_bonus_tax = self.bonus_tax(bonus)
-        Unoptimised_income_tax = PayCaculator(gross_salary, insurance_base, housing_base, special_deduction).payroll()[-1][-1]
+        Unoptimised_income_tax = PayCaculator(gross_salary, insurance_base, housing_base, special_deduction).payroll()[-1][-1] # cumulative_tax_list[-1], initial value
         Unoptimised_tax = Unoptimised_bonus_tax + Unoptimised_income_tax
         pre_tax = Unoptimised_tax  # used to store each step' values for comparing
 
@@ -171,8 +171,9 @@ class PayCaculator:
             tmp_bonus_tax = self.bonus_tax(num)
             # as gross_salary[-1] is self-decreasing, just add the increment at each step
             self.gross_salary[-1] = last_month_income + bonus - num
-            tmp_income_tax = PayCaculator(gross_salary, insurance_base, housing_base, special_deduction).payroll()[-1][-1]
+            tmp_income_tax = PayCaculator(gross_salary, insurance_base, housing_base, special_deduction).payroll()[-1][-1] # cumulative_tax_list[-1], updating value
             optimised_tax = tmp_bonus_tax + tmp_income_tax
+            # updating optimised values
             if optimised_tax < pre_tax:
                 optimised_bonus = num
                 optimised_income = bonus - num
@@ -226,29 +227,4 @@ special_deduction = [2000] * 12
 test = PayCaculator(gross_salary, insurance_base, housing_base, special_deduction)
 test.payroll()
 test.output()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
